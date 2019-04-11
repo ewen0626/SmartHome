@@ -59,7 +59,10 @@ def err(socket, code, msg):
   socket.write("<h1>"+msg+"</h1>")
 
 def handleRequest(client):
-  req = client.recv(1024).decode('utf8')
+  req = client.recv(2048).decode('utf8')
+  print('------------------------')
+  print(req)
+  print('------------------------')
   firstLine = req.split('\r\n')[0]
   print(firstLine)
     
@@ -84,9 +87,13 @@ def handleRequest(client):
     elif fileName == 'setWiFi':
       fileName = fileName + '.html'
       sendFile(client, fileName)
-
     else:
       err(client, "501", "Not Implemented")
+  
+  elif httpMethod == 'POST':
+    if path == "/setwifi":
+      
+      print("hahaha")
 
 
 
