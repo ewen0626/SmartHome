@@ -112,7 +112,7 @@ def query(client, path):
     data = file.read()
     file.close()
     data = json.loads(data)
-    data['deviceName'] = unquote(deviceName)
+    data['deviceName'] = deviceName
     file = open("config.json",'w')
     data = json.dumps(data)
     file.write(data) 
@@ -210,6 +210,7 @@ def main():
     print('--------------------------------------------')
 
 main()
+
 
 
 

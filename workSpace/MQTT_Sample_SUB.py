@@ -10,6 +10,7 @@ relay = Pin(2, Pin.OUT)
 # Received messages from subscriptions will be delivered to this callback
 def sub_cb(topic, msg):
   print((topic, msg))
+  print(msg.decode('utf8'))
   light_state = 1 - relay.value()
   relay.value(light_state)
   
@@ -37,5 +38,6 @@ def main(server="test.mosquitto.org"):
 
 if __name__ == "__main__":
   main()
+
 
 
