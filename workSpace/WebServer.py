@@ -2,6 +2,7 @@
 import network
 import json
 from machine import Pin
+#from urllib import unquote
 
 relay = Pin(2, Pin.OUT)
 ap = network.WLAN(network.AP_IF)
@@ -13,6 +14,24 @@ sta = network.WLAN(network.STA_IF)
 sta.active(True)
 sta.connect("5678","")
 print(sta.ifconfig())
+
+
+
+file = open("config.json",'r') #讀取預設WIFI設定檔案
+data = file.read()
+file.close()
+data = json.loads(data)
+"""
+file = open("config.json",'w')
+data = json.dumps(data)
+file.write(data) 
+file.close()
+print(data)
+"""
+
+
+
+
 
 import socket, os, gc
 machine.freq(160000000)
@@ -83,8 +102,23 @@ def query(client, path):
     args = parse(str)
     ssid = args['ssid']
     password = args['pass']
+    deviceName = args['deviceName']
     sta.connect(ssid,password)
     ap.active(False)
+    
+    
+    
+    file = open("config.json",'r') #讀取預設WIFI設定檔案
+    data = file.read()
+    file.close()
+    data = json.loads(data)
+    data['deviceName'] = unquote(deviceName)
+    file = open("config.json",'w')
+    data = json.dumps(data)
+    file.write(data) 
+    file.close()
+    print(data)
+    
     err(client, "200", "SetWiFiOK" )
   
 
@@ -118,7 +152,7 @@ def handleRequest(client):
       fileName = 'index.html'
       sendFile(client, fileName)
       
-      
+    
     elif fileName == "light":
       light_state = 1 - relay.value()
       relay.value(light_state)
@@ -176,6 +210,8 @@ def main():
     print('--------------------------------------------')
 
 main()
+
+
 
 
 

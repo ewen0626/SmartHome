@@ -1,15 +1,19 @@
 
-    
-from umqtt.simple import MQTTClient
+import json
+file = open("config.json",'r') #讀取預設WIFI設定檔案
+data = file.read()
+file.close()
+data = json.loads(data)
+print(data)
+file = open("config.json",'w')
+data = json.dumps(data)
+file.write(data) 
+file.close()
+print(data)
 
-# Test reception e.g. with:
-# mosquitto_sub -t foo_topic
+from urllib import unquote
+#from urllib import unquote
+#unquote('%C4%A7%CA%DE')
 
-def main(server="test.mosquitto.org"):
-    c = MQTTClient("umqtt_client", server)
-    c.connect()
-    c.publish(b"homebridge/from/set", b"hello")
-    c.disconnect()
+#print (urllib.unquote('%C4%A7%CA%DE'))
 
-if __name__ == "__main__":
-    main()
