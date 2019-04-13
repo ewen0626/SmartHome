@@ -1,4 +1,4 @@
-
+import time
 import network
 import json
 from machine import Pin
@@ -13,6 +13,8 @@ sta = network.WLAN(network.STA_IF)
 #ap.active(True)
 sta.active(True)
 sta.connect("5678","")
+while not sta.isconnected():
+  pass
 print(sta.ifconfig())
 
 
@@ -102,11 +104,27 @@ def query(client, path):
     args = parse(str)
     ssid = args['ssid']
     password = args['pass']
+    
+    
     deviceName = args['deviceName']
     sta.connect(ssid,password)
+    while not sta.isconnected():
+      pass
+    
     ap.active(False)
     
+    import urequests as req
+
+    apiURL='{url}?pin={temp}'.format(
+      url   = 'http://192.168.0.199:8080/123',
+      temp  = deviceName
     
+    )
+
+    r = req.get(apiURL)
+    deviceName = r.text
+    print('content:', r.content)
+    print('text:', deviceName)
     
     file = open("config.json",'r') #讀取預設WIFI設定檔案
     data = file.read()
@@ -165,7 +183,9 @@ def handleRequest(client):
     else:
       sendFile(client, fileName)
       #print("go to sendFile")
+
   else:
+    
     err(client, "501", "Not Implemented")
 
   
@@ -200,6 +220,7 @@ def main():
   s.listen(5)
   print('Web server running on port', PORT)
   while True:
+    time.sleep(0.1)
     client = s.accept()[0]   
     handleRequest(client)
     client.close()
@@ -210,6 +231,7 @@ def main():
     print('--------------------------------------------')
 
 main()
+
 
 
 
