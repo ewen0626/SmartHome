@@ -12,7 +12,7 @@ sta = network.WLAN(network.STA_IF)
 #ap.config(essid='TangSmartHome')
 #ap.active(True)
 sta.active(True)
-sta.connect("5678","")
+sta.connect("dlink-731","1223334444")
 while not sta.isconnected():
   pass
 print(sta.ifconfig())
@@ -231,6 +231,7 @@ def main():
     print('--------------------------------------------')
 
 main()
+
 
 
 
