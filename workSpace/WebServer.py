@@ -12,7 +12,7 @@ sta = network.WLAN(network.STA_IF)
 #ap.config(essid='TangSmartHome')
 #ap.active(True)
 sta.active(True)
-sta.connect("dlink-731","1223334444")
+sta.connect("5678","")
 while not sta.isconnected():
   pass
 print(sta.ifconfig())
@@ -36,8 +36,8 @@ print(data)
 
 
 import socket, os, gc
-machine.freq(160000000)
-print(machine.freq())
+#machine.freq(160000000)
+#print(machine.freq())
 HOST = '0.0.0.0'
 PORT = 80
 
@@ -231,6 +231,7 @@ def main():
     print('--------------------------------------------')
 
 main()
+
 
 
 
