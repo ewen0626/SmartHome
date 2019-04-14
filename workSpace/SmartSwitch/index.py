@@ -8,8 +8,8 @@ import machine
 
 WiFi_SSID = "5678"
 WiFi_PASS = ""
-MQTT_Server = "192.168.0.195"
-DeviceName = "開關"
+MQTT_Server = "192.168.0.192"
+DeviceName = "測試開關1"
 
 
 
@@ -65,6 +65,7 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
 
 if __name__ == "__main__":
   main()
+
 
 
 
