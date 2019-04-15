@@ -6,10 +6,10 @@ from umqtt.simple import MQTTClient
 from machine import Pin
 import machine 
 
-WiFi_SSID = "5678"
-WiFi_PASS = ""
-MQTT_Server = "192.168.0.192"
-DeviceName = "測試開關1"
+WiFi_SSID = "dlink-731"
+WiFi_PASS = "1223334444"
+MQTT_Server = "192.168.0.112"
+DeviceName = "華碩測試開關"
 
 
 
@@ -65,6 +65,7 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
 
 if __name__ == "__main__":
   main()
+
 
 
 
