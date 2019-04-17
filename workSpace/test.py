@@ -1,37 +1,23 @@
-
-import json
-file = open("config.json",'r') #讀取預設WIFI設定檔案
-data = file.read()
-file.close()
-data = json.loads(data)
-print(data)
-file = open("config.json",'w')
-data = json.dumps(data)
-file.write(data) 
-file.close()
-
-#import urllib 
-#from urllib import unquote
-#unquote('%C4%A7%CA%DE')
-print("123")
-#print(unquote_plus('%E6%88%BF%E9%96%93%E7%87%88'))
-
-
 # -*- coding: utf-8 -*-
 
 """
-   程式說明請參閱17-23頁
+  程式說明請參閱18-33頁
 """
 
-import urequests as req
+import machine
+import time
 
-apiURL='{url}?pin={temp}'.format(
-    url   = 'http://192.168.0.199:8080/123',
-    temp  = "%E6%88%BF%E9%96%93%E7%87%88"
-    
-)
+rtc = machine.RTC()
+rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
+rtc.alarm(rtc.ALARM0, 10000)
 
-r = req.get(apiURL)
+if machine.reset_cause() == machine.DEEPSLEEP_RESET:
+  print('woke from a deep sleep')
+else:
+  print('power on or hard reset')
 
-print('content:', r.content)
-print('text:', r.text)
+for i in range(5):
+  print('Going sleep in {} sec.'.format(5-i))
+  time.sleep(1)
+
+machine.deepsleep()

@@ -11,9 +11,9 @@ import machine
 import network
 import ubinascii
 
-WiFi_SSID = "dlink-731"
-WiFi_PASS = "1223334444"
-MQTT_Server = "192.168.0.112"
+WiFi_SSID = "5678"
+WiFi_PASS = ""
+MQTT_Server = "192.168.0.199"
 DeviceName = "Temp"
 data = {}
 
@@ -34,7 +34,6 @@ rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
 rtc.alarm(rtc.ALARM0, 20000)
 
 time.sleep(2)
-
 
 
 
@@ -63,4 +62,5 @@ c.publish(b"homebridge/to/set", data)
 c.disconnect()
 print("published!")
 time.sleep(1)
-machine.deepsleep()
+#machine.deepsleep()
+

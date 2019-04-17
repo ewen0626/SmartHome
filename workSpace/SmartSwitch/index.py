@@ -16,11 +16,14 @@ DeviceName = "華碩測試開關"
 machine.freq(160000000)
 print(machine.freq()) #設定工作頻率
 
+ap = network.WLAN(network.AP_IF)
+ap.active(False)
 
 sta = network.WLAN(network.STA_IF) #設定WiFi連線
-mac = ubinascii.hexlify(sta.config('mac'),':').decode()#取得MAC ADDRESS
 sta.active(True)
 sta.connect(WiFi_SSID,WiFi_PASS)
+
+mac = ubinascii.hexlify(sta.config('mac'),':').decode()#取得MAC ADDRESS
 print(mac)
 
 while not sta.isconnected(): #等待連線完成
@@ -65,6 +68,7 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
 
 if __name__ == "__main__":
   main()
+
 
 
 
