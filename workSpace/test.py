@@ -3,21 +3,32 @@
 """
   程式說明請參閱18-33頁
 """
-
-import machine
+from umqtt.robust import MQTTClient
 import time
+import network
+WiFi_SSID = "5678"
+WiFi_PASS = ""
+MQTT_Server = "192.168.0.199"
+DeviceName = "測試開關"
+sta = network.WLAN(network.STA_IF) #設定WiFi連線
+sta.active(True)
+sta.connect(WiFi_SSID,WiFi_PASS)
+while not sta.isconnected(): #等待連線完成
+  pass
+print(sta.ifconfig())
+def sub_cb(topic, msg):
+  print((topic, msg))
+  
+c = MQTTClient("umqtt_client", MQTT_Server)
+c.DEBUG = True
+c.set_callback(sub_cb)
 
-rtc = machine.RTC()
-rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-rtc.alarm(rtc.ALARM0, 10000)
 
-if machine.reset_cause() == machine.DEEPSLEEP_RESET:
-  print('woke from a deep sleep')
-else:
-  print('power on or hard reset')
+if not c.connect(clean_session=False):
+  print("New session being set up")
+  c.subscribe(b"homebridge/from/set")
 
-for i in range(5):
-  print('Going sleep in {} sec.'.format(5-i))
-  time.sleep(1)
+while 1:
+  c.wait_msg()
 
-machine.deepsleep()
+c.disconnect()

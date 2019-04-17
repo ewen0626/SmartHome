@@ -31,7 +31,7 @@ d = dht.DHT22(Pin(2))
 
 rtc = machine.RTC()
 rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-rtc.alarm(rtc.ALARM0, 20000)
+rtc.alarm(rtc.ALARM0, 30000)
 
 time.sleep(2)
 
@@ -62,5 +62,6 @@ c.publish(b"homebridge/to/set", data)
 c.disconnect()
 print("published!")
 time.sleep(1)
-#machine.deepsleep()
+machine.deepsleep()
+
 

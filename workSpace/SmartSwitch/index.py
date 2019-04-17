@@ -6,10 +6,10 @@ from umqtt.simple import MQTTClient
 from machine import Pin
 import machine 
 
-WiFi_SSID = "dlink-731"
-WiFi_PASS = "1223334444"
-MQTT_Server = "192.168.0.112"
-DeviceName = "華碩測試開關"
+WiFi_SSID = "5678"
+WiFi_PASS = ""
+MQTT_Server = "192.168.0.199"
+DeviceName = "測試開關"
 
 
 
@@ -50,24 +50,28 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
   c1.set_callback(sub_cb)
   c1.connect()
   c1.subscribe(b"homebridge/from/set") #subscribe homebridge's Topic
-  
+  #c1.ping()
   
   while True:
-    if True:
+    #c1.connect()
+    #c1.subscribe(b"homebridge/from/set") #subscribe homebridge's Topic
       # Blocking wait for message
+      #c1.connect()
       c1.wait_msg()
-
-    else:
       # Non-blocking wait for message
       c1.check_msg()
       # Then need to sleep to avoid 100% CPU usage (in a real
       # app other useful actions would be performed instead)
-      time.sleep(0.1)
+      time.sleep(0.3)
+
+
 
   c1.disconnect()
 
 if __name__ == "__main__":
   main()
+
+
 
 
 
