@@ -11,9 +11,9 @@ import machine
 import network
 import ubinascii
 
-WiFi_SSID = "5678"
-WiFi_PASS = ""
-MQTT_Server = "192.168.0.199"
+WiFi_SSID = "dlink-731"
+WiFi_PASS = "1223334444"
+MQTT_Server = "192.168.0.112"
 DeviceName = "Temp"
 data = {}
 
@@ -23,6 +23,8 @@ sta.connect(WiFi_SSID,WiFi_PASS)
 mac = ubinascii.hexlify(sta.config('mac'),':').decode()#取得ADDRESS
 print(mac)
 while not sta.isconnected():
+  time.sleep(0.3)
+  print(".")
   pass
 print(sta.ifconfig())
 
@@ -63,5 +65,6 @@ c.disconnect()
 print("published!")
 time.sleep(1)
 machine.deepsleep()
+
 
 
