@@ -32,27 +32,29 @@ config = {
 	'id' : 'room/' + ubinascii.hexlify(machine.unique_id()).decode(),
 	'topic' : b'channels/772089/publish/I2AEIIER4RWMW0RT'
 }
+try:
+  client = MQTTClient(client_id=config['id'],
+       server=config['broker'],
+       user=config['user'],
+       password=config['key'])
 
-client = MQTTClient(client_id=config['id'],
-		 server=config['broker'],
-	 	 user=config['user'],
-		 password=config['key'])
+  d = dht.DHT22(Pin(5))
 
-d = dht.DHT22(Pin(2))
-
-if machine.reset_cause() == machine.DEEPSLEEP_RESET:
-	print('Publish data to ThingSpeak.')
-	
-	d.measure()
-	data = 'field1={}&field2={}'.format(
-		d.temperature(), 
-		d.humidity())
-	
-	client.connect()
-	client.publish(config['topic'],data.encode())
-	time.sleep(2)
-	client.disconnect()
-
+  if machine.reset_cause() == machine.DEEPSLEEP_RESET:
+    print('Publish data to ThingSpeak.')
+    
+    d.measure()
+    data = 'field1={}&field2={}'.format(
+      d.temperature(), 
+      d.humidity())
+    
+    client.connect()
+    client.publish(config['topic'],data.encode())
+    time.sleep(2)
+    client.disconnect()
+except:
+  print("ERROR")
 print('Going to sleep...')
 machine.deepsleep()
+
 

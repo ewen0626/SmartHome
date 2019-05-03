@@ -11,9 +11,9 @@ import machine
 import network
 import ubinascii
 
-WiFi_SSID = "dlink-731"
-WiFi_PASS = "1223334444"
-MQTT_Server = "192.168.0.112"
+WiFi_SSID = "5678"
+WiFi_PASS = ""
+MQTT_Server = "192.168.0.199"
 DeviceName = "Temp"
 data = {}
 
@@ -29,7 +29,7 @@ while not sta.isconnected():
 print(sta.ifconfig())
 
 
-d = dht.DHT22(Pin(2))
+d = dht.DHT22(Pin(5))
 
 rtc = machine.RTC()
 rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
@@ -38,33 +38,40 @@ rtc.alarm(rtc.ALARM0, 30000)
 time.sleep(2)
 
 
-
-d.measure()
-temp = d.temperature()
-hum = d.humidity()
-data['name'] = DeviceName
-data['characteristic'] = 'CurrentTemperature'
-data['value'] = temp
-data = json.dumps(data)
-print(data)
-print("----------------------------")
-print('Humidity: {}%'.format(hum))
-print('Temperature: {}{}C'.format(temp, '\u00b0'))
-print("GO TO SLEEP")
-print("----------------------------")
-
-
-c = MQTTClient("SuperTang" + mac, MQTT_Server)
-
-c.connect()
-
-c.publish(b"homebridge/to/set", data)
+try:
+  d.measure()
+  time.sleep_ms(50)
+  temp = d.temperature()
+  hum = d.humidity()
+  data['name'] = DeviceName
+  data['characteristic'] = 'CurrentTemperature'
+  data['value'] = temp
+  data = json.dumps(data)
+  print(data)
+  print("----------------------------")
+  print('Humidity: {}%'.format(hum))
+  print('Temperature: {}{}C'.format(temp, '\u00b0'))
+  
+  print("----------------------------")
 
 
-c.disconnect()
-print("published!")
+  c = MQTTClient("SuperTang" + mac, MQTT_Server)
+
+  c.connect()
+
+  c.publish(b"homebridge/to/set", data)
+
+
+  c.disconnect()
+  print("published!")
+except:
+  
+  print("ERROR")
+
 time.sleep(1)
+print("GO TO SLEEP")
 machine.deepsleep()
+
 
 
 
