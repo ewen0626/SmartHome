@@ -69,7 +69,11 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
   c1.disconnect()
 
 if __name__ == "__main__":
-  main()
+  try:
+    main()
+  except:
+    machine.reset()
+
 
 
 
