@@ -6,9 +6,9 @@ from umqtt.simple import MQTTClient
 from machine import Pin
 import machine 
 
-WiFi_SSID = "5678"
-WiFi_PASS = ""
-MQTT_Server = "192.168.0.199"
+WiFi_SSID = "dlink-731"
+WiFi_PASS = "1223334444"
+MQTT_Server = "192.168.0.112"
 DeviceName = "測試開關"
 
 
@@ -27,6 +27,8 @@ mac = ubinascii.hexlify(sta.config('mac'),':').decode()#取得MAC ADDRESS
 print(mac)
 
 while not sta.isconnected(): #等待連線完成
+  print(".")
+  time.sleep(0.3)
   pass
 print(sta.ifconfig())
 
@@ -72,16 +74,8 @@ if __name__ == "__main__":
   try:
     main()
   except:
+    print("ERROR....Reset...")
     machine.reset()
-
-
-
-
-
-
-
-
-
 
 
 

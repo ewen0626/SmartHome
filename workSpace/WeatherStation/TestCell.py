@@ -15,6 +15,8 @@ import ubinascii
 rtc = machine.RTC()
 rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
 rtc.alarm(rtc.ALARM0, 30000)
+ap = network.WLAN(network.AP_IF)
+ap.active(False)
 
 sta_if = network.WLAN(network.STA_IF)
 sta_if.active(True)
@@ -56,5 +58,6 @@ except:
   print("ERROR")
 print('Going to sleep...')
 machine.deepsleep()
+
 
 

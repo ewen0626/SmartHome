@@ -16,7 +16,8 @@ WiFi_PASS = ""
 MQTT_Server = "192.168.0.199"
 DeviceName = "Temp"
 data = {}
-
+ap = network.WLAN(network.AP_IF)
+ap.active(False)
 sta = network.WLAN(network.STA_IF) #設定WiFi連線
 sta.active(True)
 sta.connect(WiFi_SSID,WiFi_PASS)
@@ -71,6 +72,7 @@ except:
 time.sleep(1)
 print("GO TO SLEEP")
 machine.deepsleep()
+
 
 
 
