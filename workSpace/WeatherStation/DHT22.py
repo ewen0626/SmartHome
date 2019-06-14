@@ -12,11 +12,12 @@ import network
 import ubinascii
 
 WiFi_SSID = "SuperTang"
-WiFi_PASS = ""
+WiFi_PASS = "0930082454"
 MQTT_Server = "192.168.1.112"
-DeviceName_temp = "客廳溫度"
-DeviceName_hum = "客廳濕度"
-data = {}
+DeviceName_temp = "Living_Temp"
+DeviceName_hum = "Living_Humi"
+data_temp = {}
+data_hum = {}
 ap = network.WLAN(network.AP_IF)
 ap.active(False)
 sta = network.WLAN(network.STA_IF) #設定WiFi連線
@@ -45,26 +46,30 @@ try:
   time.sleep_ms(50)
   temp = d.temperature()
   hum = d.humidity()
-  data_temp['name'] = DeviceName_temp
-  data_temp['characteristic'] = 'CurrentTemperature'
-  data_temp['value'] = temp
-  data_temp = json.dumps(data_temp)
   
-  data_hum['name'] = DeviceName_hum
-  data_hum['characteristic'] = 'CurrentRelativeHumidity'
-  data_hum['value'] = hum
-  data_hum = json.dumps(data_hum) 
   
-  print(data)
   print("----------------------------")
   print('Humidity: {}%'.format(hum))
   print('Temperature: {}{}C'.format(temp, '\u00b0'))
   print("----------------------------")
+  data_temp['name'] = DeviceName_temp
+  data_temp['characteristic'] = 'CurrentTemperature'
+  data_temp['value'] = temp
+  data_temp = json.dumps(data_temp)
+  print(data_temp)
+  data_hum['name'] = DeviceName_hum
+  data_hum['characteristic'] = 'CurrentRelativeHumidity'
+  data_hum['value'] = hum
+  data_hum = json.dumps(data_hum) 
+  print(data_hum)
+  
 
 
   c = MQTTClient("SuperTang" + mac, MQTT_Server)
   c.connect()
+  time.sleep(0.3)
   c.publish(b"homebridge/to/set", data_hum)
+  time.sleep(0.3)
   c.publish(b"homebridge/to/set", data_temp)
 
   c.disconnect()
@@ -76,6 +81,7 @@ except:
 time.sleep(1)
 print("GO TO SLEEP")
 machine.deepsleep()
+
 
 
 
