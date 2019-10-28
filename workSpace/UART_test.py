@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
-
 from machine import UART
+import time
 com = UART(0, 115200)
 com.init(115200)
 
@@ -11,5 +9,4 @@ while True:
   if data:
     print(data)
     com.write(data)
-
 

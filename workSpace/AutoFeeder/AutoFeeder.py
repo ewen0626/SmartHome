@@ -1,15 +1,18 @@
+#91~102 涓嶅嫊
+#90 鎱㈣綁
+import time
+from machine import PWM,ADC
+from machine import Pin
 import json
 import time
 import network
 import ubinascii
 from umqtt.simple import MQTTClient
-from machine import Pin
-import machine 
 
 WiFi_SSID = "SuperTang"
 WiFi_PASS = "0930082454"
 MQTT_Server = "192.168.1.112"
-DeviceName = "主臥室燈"
+#DeviceName = "主臥室燈"
 
 
 
@@ -30,28 +33,45 @@ while not sta.isconnected(): #等待連線完成
   print(".")
   time.sleep(0.3)
   pass
+led=Pin(2,Pin.OUT)
+led.value(0)
 print(sta.ifconfig())
 
 
-relay = Pin(4, Pin.OUT) #設定Pin為輸出模式
+servo = PWM(Pin(5), freq=50)
+IR=Pin(14,Pin.IN)           
 
+period = 20000
+minDuty = int(500/period * 1024)
+maxDuty = int(2400/period * 1024)
+unit = (maxDuty - minDuty)/180
+
+def rotate(servo, degree=91):
+  _duty = round(unit * degree) + minDuty
+  _duty = min(maxDuty, max(minDuty, _duty))
+  servo.duty(_duty)
+  
+  
 def sub_cb(topic, msg): # 收到訊息時處理
   msg_decode = msg.decode('utf8')
-  msg_decode = json.loads(msg_decode) #資料前處理
+  #msg_decode = json.loads(msg_decode) #資料前處理
   print((topic, msg))
-  print(msg_decode['service_name'])
+  #print(msg_decode['service_name'])
   
-  if msg_decode["service_name"] == DeviceName:
-    light_state = 1 - relay.value()
-    relay.value(light_state)
-  
-  
+  if msg_decode == "feed":
+    rotate(servo, 90)
+    time.sleep(0.5)
+    while IR.value()==1:
+      rotate(servo, 90)
+
+    rotate(servo, 91)
+
 
 def main(server=MQTT_Server):  #Connect to MQTT Server 
   c1 = MQTTClient("SuperTang" + mac, server)
   c1.set_callback(sub_cb)
   c1.connect()
-  c1.subscribe(b"homebridge/from/set") #subscribe homebridge's Topic
+  c1.subscribe(b"CatFeeder") #subscribe homebridge's Topic
   #c1.ping()
   
   while True:
@@ -76,11 +96,6 @@ if __name__ == "__main__":
   
   print("ERROR....Reset...")
   #machine.reset()
-
-
-
-
-
 
 
 
