@@ -10,5 +10,8 @@ wifidata = ""
 #print(aps)
 for data in aps:
   wifidata = wifidata + "+CWLAP:" + str(data)
-  
-print(wifidata)
+  mac=ubinascii.hexlify(data[1], ':').decode()
+  print(mac)
+  #print(data)
+#print(wifidata)
+
