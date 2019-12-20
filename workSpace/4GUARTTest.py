@@ -7,7 +7,7 @@ wlan=network.WLAN(network.STA_IF)
 wlan.active(True)       #掃描附近無線基地台
 i =0
 
-com = UART(0, 115200)
+com = UART(1, 115200,tx=2,rx=15)
 com.init(115200)
 
 while i<5:
@@ -33,8 +33,9 @@ while True:
     data[2] = data[3]
     wifidata = wifidata + "+CWLAP:" + str(data)
   print(wifidata)
-  #com.write(wifidata)
+  com.write(wifidata)
   #com.write("\r\n")
   time.sleep(3)
   
+
 
