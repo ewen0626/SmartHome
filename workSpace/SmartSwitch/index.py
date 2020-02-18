@@ -5,6 +5,7 @@ import ubinascii
 from umqtt.simple import MQTTClient
 from machine import Pin
 import machine 
+import os
 
 WiFi_SSID = "SuperTang"
 WiFi_PASS = "0930082454"
@@ -34,6 +35,13 @@ print(sta.ifconfig())
 
 
 relay = Pin(4, Pin.OUT) #設定Pin為輸出模式
+try:
+  f=open('state.txt','r')
+  relay.value(f.read())
+  f.close()
+  print(relay.value())
+except:
+  print('maybe first')
 
 def sub_cb(topic, msg): # 收到訊息時處理
   msg_decode = msg.decode('utf8')
@@ -41,17 +49,23 @@ def sub_cb(topic, msg): # 收到訊息時處理
   print((topic, msg))
   print(msg_decode['service_name'])
   
-  if msg_decode["service_name"] == DeviceName:
+  if (msg_decode["service_name"] == DeviceName):
     light_state = 1 - relay.value()
-    relay.value(light_state)
-  
+    print(relay.value())
+    relay.value(light_state) 
+    f=open('state.txt','w')
+    f.write(str(relay.value()))
+    f.close()
   
 
 def main(server=MQTT_Server):  #Connect to MQTT Server 
+  print("waiting")
+  
   c1 = MQTTClient("SuperTang" + mac, server)
   c1.set_callback(sub_cb)
   c1.connect()
   c1.subscribe(b"homebridge/from/set") #subscribe homebridge's Topic
+  
   #c1.ping()
   
   while True:
@@ -59,6 +73,7 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
     #c1.subscribe(b"homebridge/from/set") #subscribe homebridge's Topic
       # Blocking wait for message
       #c1.connect()
+      
       c1.wait_msg()
       # Non-blocking wait for message
       c1.check_msg()
@@ -66,16 +81,15 @@ def main(server=MQTT_Server):  #Connect to MQTT Server
       # app other useful actions would be performed instead)
       time.sleep(0.3)
 
-
-
   c1.disconnect()
 
-if __name__ == "__main__":
 
+try:
   main()
-  
+except:  
   print("ERROR....Reset...")
-  #machine.reset()
+  machine.reset()
+
 
 
 
